@@ -1,0 +1,212 @@
+import time
+from numpy import dtype
+import spacy
+from spacy import displacy
+from spacy.matcher import Matcher
+import textacy
+from textacy import extract
+
+def noun_replace(original_document):
+    '''Returns a list of documents. Noun chunks that meet the specified
+    dependency and POS criteria are replaced with 'you'.
+    
+    Parameters
+    ----------
+    original_document : string
+        Document to be converted into a spacy nlp object.
+
+    Example
+    -------
+    Original Document: "Bobby will cry when Alice takes the ball away."
+    Returns:    ['you will cry when Alice takes the ball away.',
+                'Bobby will cry when you takes the ball away.']
+
+    '''
+
+    labels = ["nsubj", "nsubjpass", "attr", "ROOT",
+        # "pcomp","pobj","dative","appos","dobj",
+    ]
+
+    noun_mod_docs = []
+
+    nlp_doc = nlp(original_document)
+
+    for chunk in nlp_doc.noun_chunks:
+        if chunk.root.dep_ in labels and chunk.root.pos_ in ('NOUN','PROPN'):
+            # print('"',chunk,'" is a',chunk.root.dep_,'. Replacing with "You".')
+            second_person_doc = original_document.replace(str(chunk),'you')
+            # print(second_person_doc)
+            # print('-----\n')
+            noun_mod_docs.append(second_person_doc)
+    
+    return noun_mod_docs
+
+def verb_replace(original_document, i=0):
+    '''Returns a document replacing verbs meeting specified criteria with the
+    structure "will {lemmatized verb}"
+    
+    Parameters
+    ----------
+    original_document : str
+        Document in which you would like to replace verbs
+
+    i : int
+        Counter set to 0. I should put it in the function instead. I'll do that
+        later because right now it's working, and changing that will probably
+        magically break it... haha (sort of)
+
+    '''
+    nlp_doc = nlp(original_document)
+
+    verb_count = 0
+    for token in nlp_doc:
+        if token.pos_ in ['VERB', 'AUX']:
+            verb_count +=1
+    # print("vc:",verb_count)
+    # print("i:",i)
+
+    if i == verb_count:
+        return original_document
+    
+    for token in nlp_doc:
+        # print(token)
+        # print(spacy.explain(token.tag_), '\n')
+        token_tag = spacy.explain(token.tag_)
+
+        if (token.pos_ in ['VERB', 'AUX']
+            and token_tag in ["verb, 3rd person singular present"
+                             ,"verb, non-3rd person singular present"]
+            and token.dep_ != 'advcl'):
+            # This will not work for adverbial clauses, so add that logic in later
+            working_doc = original_document.replace(str(token),f"will {token.lemma_}")
+            # print("Working Doc:",working_doc)
+            i+=1
+            return verb_replace(working_doc, i)
+
+    return original_document
+
+
+# nlp = spacy.load('en_core_web_sm')
+nlp = spacy.load('en_core_web_trf')
+
+# og_text = 'An RAF squadron is assigned to knock out a German rocket fuel factory in Norway.'
+# og_text = 'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.'
+# og_text = 'The ninja find themselves trapped in a pyramid and must escape encroaching lava to warn Ninjago City of a new Serpentine invasion.'
+# og_text ='When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.'
+# og_text = 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.'
+# og_text = "A cowboy doll is profoundly threatened and jealous when a new spaceman action figure supplants him as top toy in a boy's bedroom."
+# og_text = 'A man raised by gorillas must decide where he really belongs when he discovers he is a human.'
+og_text = "To save her father from death in the army, a young maiden secretly goes in his place and becomes one of China's greatest heroines in the process."
+# og_text = 'An English soldier and the daughter of an Algonquin chief share a romance when English colonists invade seventeenth century Virginia.'
+# og_text = "A poor but hopeful boy seeks one of the five coveted golden tickets that will send him on a tour of Willy Wonka's mysterious chocolate factory."
+
+
+nlp_doc = nlp(og_text)
+
+
+nouns_replaced = noun_replace(og_text)
+
+
+verbs_replaced = verb_replace(nouns_replaced[0])
+
+# def pronoun_replace(original_document):
+
+
+
+
+# for element in nouns_replaced:
+#     print(verb_replace(element))
+
+
+
+
+
+
+
+
+
+
+
+for token in nlp(verbs_replaced):
+     print (token, token.lemma_, token.dep_, token.tag_, token.pos_, spacy.explain(token.tag_), token.head)
+
+for token in nlp_doc:
+     print (token, token.lemma_, token.dep_, token.tag_, token.pos_, spacy.explain(token.tag_))
+
+
+for chunk in nlp(verbs_replaced).noun_chunks:
+    print('noun chunk:',chunk
+          ,'\nchunk root:', chunk.root.text
+          ,'\nchunk dependency:', chunk.root.dep_
+          ,'\nroot head text:', chunk.root.head.text
+          ,'\nchunk part of speech',chunk.root.pos_
+          ,'\n-------------------')
+
+
+
+
+
+# print ([token.text for token in introduction_doc])
+
+# for token in introduction_doc:
+#      print (token, token.lemma_, token.dep_, token.tag_, token.pos_, spacy.explain(token.tag_))
+
+
+displacy.serve(nlp_doc, style='dep')
+
+# for chunk in introduction_doc.noun_chunks:
+#     print('noun chunk:',chunk
+#           ,'\nchunk root:', chunk.root.text
+#           ,'\nchunk dependency:', chunk.root.dep_
+#           ,'\nroot head text:', chunk.root.head.text
+#           ,'\nchunk part of speech',chunk.root.pos_
+#           ,'\n-------------------')
+
+
+
+
+# Identify the subject of the sentence
+# Find the noun chunk about the subject
+# Change that noun chunk to "You"
+
+# Find pronouns and change them to "yourself"
+
+# Find the AUX verb to that noun chunk
+# Lemmatize the verb
+# Change that AUX verb to the future tense
+# Make a rule that looks for ADV + VERB combo and adds "will" before the adverb,
+## but only if the ADV+VERB combo is related to the subject.
+## Exclude adverbial clauses ^^
+
+
+
+
+
+
+# Expanding named entities and adding a component to the NLP pipeline object
+# Example from https://spacy.io/usage/rule-based-matching#models-rules-ner
+# import spacy
+# from spacy.language import Language
+# from spacy.tokens import Span
+
+# nlp = spacy.load("en_core_web_sm")
+
+# @Language.component("expand_person_entities")
+# def expand_person_entities(doc):
+#     new_ents = []
+#     for ent in doc.ents:
+#         if ent.label_ == "PERSON" and ent.start != 0:
+#             prev_token = doc[ent.start - 1]
+#             if prev_token.text in ("Dr", "Dr.", "Mr", "Mr.", "Ms", "Ms."):
+#                 new_ent = Span(doc, ent.start - 1, ent.end, label=ent.label)
+#                 new_ents.append(new_ent)
+#         else:
+#             new_ents.append(ent)
+#     doc.ents = new_ents
+#     return doc
+
+# # Add the component after the named entity recognizer
+# nlp.add_pipe("expand_person_entities", after="ner")
+
+# doc = nlp("Dr. Alex Smith chaired first board meeting of Acme Corp Inc.")
+# print([(ent.text, ent.label_) for ent in doc.ents])

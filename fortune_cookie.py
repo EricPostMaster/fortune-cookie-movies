@@ -41,7 +41,7 @@ def noun_replace(original_document):
     
     return noun_mod_docs
 
-def verb_replace(original_document, i=0):
+def verb_replace(original_document):
     '''Returns a document replacing verbs meeting specified criteria with the
     structure "will {lemmatized verb}"
     
@@ -49,23 +49,25 @@ def verb_replace(original_document, i=0):
     ----------
     original_document : str
         Document in which you would like to replace verbs
-
-    i : int
-        Counter set to 0. I should put it in the function instead. I'll do that
-        later because right now it's working, and changing that will probably
-        magically break it... haha (sort of)
-
     '''
+
+    # Note: The docstring above is edited out as the idx i is no longer needed
+    # see the code changes below in the for loop. 
+
     nlp_doc = nlp(original_document)
 
     verb_count = 0
     for token in nlp_doc:
         if token.pos_ in ['VERB', 'AUX']:
-            verb_count +=1
+            verb_count += 1
+
     # print("vc:",verb_count)
     # print("i:",i)
 
-    if i == verb_count:
+    # if i == verb_count:
+    #     return original_document
+
+    if verb_count == 0:
         return original_document
     
     for token in nlp_doc:
@@ -73,17 +75,38 @@ def verb_replace(original_document, i=0):
         # print(spacy.explain(token.tag_), '\n')
         token_tag = spacy.explain(token.tag_)
 
-        if (token.pos_ in ['VERB', 'AUX']
-            and token_tag in ["verb, 3rd person singular present"
-                             ,"verb, non-3rd person singular present"]
-            and token.dep_ != 'advcl'):
-            # This will not work for adverbial clauses, so add that logic in later
-            working_doc = original_document.replace(str(token),f"will {token.lemma_}")
-            # print("Working Doc:",working_doc)
-            i+=1
-            return verb_replace(working_doc, i)
+        # Creating bail out statements (fail conditions) 
+        # to simplify the if section of the original code
+        # so as to be more readable (to me at least)
 
-    return original_document
+        # If the token in question isn't a verb or auxiliary verb
+        # continue on to the next token in the document
+        if token.pos_ not in ['VERB', 'AUX']:
+            continue
+        
+        # If the token tag isn't a 3rd person singular present tense verb
+        # or non-3rd person singular present tense verb, continue onward.
+        if token_tag not in ["verb, 3rd person singular present"
+                             , "verb, non-3rd person singular present"]:
+            continue
+
+        # If the token dependency is an adverbial clause, we want to bail 
+        # out early for now as this will not work for adverbial clauses; 
+        # logic will be added in later
+        if token.dep_ == 'advcl':
+            continue
+
+        # Now that the fail conditions are checked, 
+        # we can directly use the original logic.
+        # This logic will loop through the tokens in order
+        # meaning we no longer need to increment i. 
+        # The code for i is commented out below. 
+        working_doc = original_document.replace(str(token),
+                                                f"will {token.lemma_}")
+        # print("Working Doc:",working_doc)
+        # i+=1
+        # return verb_replace(working_doc, i)
+        return working_doc
 
 
 # nlp = spacy.load('en_core_web_sm')

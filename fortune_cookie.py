@@ -82,18 +82,21 @@ def verb_replace(original_document):
         # If the token in question isn't a verb or auxiliary verb
         # continue on to the next token in the document
         if token.pos_ not in ['VERB', 'AUX']:
+            # print(f"Not a verb: Token = \'{token}\'")
             continue
         
         # If the token tag isn't a 3rd person singular present tense verb
         # or non-3rd person singular present tense verb, continue onward.
         if token_tag not in ["verb, 3rd person singular present"
                              , "verb, non-3rd person singular present"]:
+            # print(f"Not a verb in 3P: Token =  \'{token}\'")
             continue
 
         # If the token dependency is an adverbial clause, we want to bail 
         # out early for now as this will not work for adverbial clauses; 
         # logic will be added in later
         if token.dep_ == 'advcl':
+            # print(f"Adverbial: Token = \'{token}\'")
             continue
 
         # Now that the fail conditions are checked, 
@@ -103,10 +106,17 @@ def verb_replace(original_document):
         # The code for i is commented out below. 
         working_doc = original_document.replace(str(token),
                                                 f"will {token.lemma_}")
+                                       
         # print("Working Doc:",working_doc)
         # i+=1
         # return verb_replace(working_doc, i)
-        return working_doc
+                
+        # Only return if replacements have been made
+        if len(working_doc) > 0:
+          return working_doc
+
+    # Return the original if no replacements have been made.
+    return original_document
 
 
 # nlp = spacy.load('en_core_web_sm')

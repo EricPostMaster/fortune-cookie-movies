@@ -17,21 +17,31 @@ EXAMPLE_SENTENCES = [
 
 EXPECTED_OUTPUT = [
 "You will be assigned to knock out a German rocket fuel factory in Norway."
-, "You from the Shire and eight companions will set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron."
+, "You and eight companions will set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron."
 , "You will find yourself trapped in a pyramid and must escape encroaching lava to warn Ninjago City of a new Serpentine invasion."
-, "When you known as the Joker will wreak havoc and chaos on the people of Gotham, Batman will accept one of the greatest psychological and physical tests of his ability to fight injustice."
+, ["When you wreak havoc and chaos on the people of Gotham, Batman will accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+  "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, you will accept one of the greatest psychological and physical tests of your ability to fight injustice."]
 , "You will bond over a number of years, finding solace and eventual redemption through acts of common decency."
-, "You will be profoundly threatened and jealous when a new spaceman action figure supplants him as top"
+, ["You will be profoundly threatened and jealous when a new spaceman action figure supplants you as top toy in a boy's bedroom.",
+  "A cowboy doll will be profoundly threatened and jealous when you supplant him as top toy in a boy's bedroom."]
 
 # The following output is a tricky case as the model verb 'must' 
 # effectively shows "future" via a currently unfulfilled obligation.  
 # The model will likely mislabel or decide that "must decide" will become
 # "must will decide" which is incorrect
-, "You raised by gorillas must decide where you really will belong when you discover you are a human."
+# Maybe synopses with "must" can be the type of fortune cookie that is counsel/instruction rather than fortune-telling?
+, "You must decide where you really belong when you discover you are a human."
+
 , "To save your father from death in the army, you secretly will go in his place and become one of China's greatest heroines in the process."
-, "You will share a romance when English colonists invade seventeenth century Virginia."
+
+, ["You and the daughter of an Algonquin chief will share a romance when English colonists invade seventeenth century Virginia.",
+"An English soldier and you will share a romance when English colonists invade seventeenth century Virginia.",
+"An English soldier and the daughter of an Algonquin chief will share a romance when you invade seventeenth century Virginia."]
 
 # This one is also slightly awkward to convert to "you" + future tense.
 # The following removes the clause that modifies the original NP
+# Like the "must" sentences above, maybe "seek", "look for", and "search for" could be left.
+# For example, "You seek one of the five coveted golden tickets that will send you on a tour of Willy Wonka's mysterious chocolate factory."
+# works just fine as a declaration of fact rather than a fortune-telling.
 , "You will seek one of the five coveted golden tickets that will send you on a tour of Willy Wonka's mysterious chocolate factory."
 ]

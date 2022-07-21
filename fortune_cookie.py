@@ -5,6 +5,10 @@ from spacy import displacy
 from spacy.matcher import Matcher
 import textacy
 from textacy import extract
+import language_tool_python
+
+tool = language_tool_python.LanguageTool('en-US')
+
 
 def noun_replace(original_document):
     '''Returns a list of documents. Noun chunks that meet the specified
@@ -107,7 +111,7 @@ def verb_replace(original_document):
         working_doc = original_document.replace(str(token),
                                                 f"will {token.lemma_}")
                                        
-        # print("Working Doc:",working_doc)
+            # print("Working Doc:",working_doc)
         # i+=1
         # return verb_replace(working_doc, i)
                 
@@ -147,6 +151,15 @@ verbs_replaced = verb_replace(nouns_replaced[0])
 
 
 
+# matches = tool.check(verbs_replaced)
+# print(matches)
+
+new_text = tool.correct(verbs_replaced)
+print(new_text)
+
+
+
+
 # for element in nouns_replaced:
 #     print(verb_replace(element))
 
@@ -154,6 +167,10 @@ verbs_replaced = verb_replace(nouns_replaced[0])
 
 
 
+
+# transitive vs reflexive verbs - save her father vs save herself
+# Not sure spaCy can tell if a verb is transitive vs reflexive
+# possessive pronouns maybe
 
 
 

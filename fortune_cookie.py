@@ -7,6 +7,8 @@ import textacy
 from textacy import extract
 import language_tool_python
 
+import test_cases
+
 tool = language_tool_python.LanguageTool('en-US')
 
 
@@ -37,11 +39,9 @@ def noun_replace(original_document):
 
     for chunk in nlp_doc.noun_chunks:
         if chunk.root.dep_ in labels and chunk.root.pos_ in ('NOUN','PROPN'):
-            # print('"',chunk,'" is a',chunk.root.dep_,'. Replacing with "You".')
             second_person_doc = original_document.replace(str(chunk),'you')
-            # print(second_person_doc)
-            # print('-----\n')
-            noun_mod_docs.append(second_person_doc)
+            cap_second_person_doc = capitalize_first_letter(second_person_doc)
+            noun_mod_docs.append(cap_second_person_doc)
     
     return noun_mod_docs
 
@@ -55,9 +55,6 @@ def verb_replace(original_document):
         Document in which you would like to replace verbs
     '''
 
-    # Note: The docstring above is edited out as the idx i is no longer needed
-    # see the code changes below in the for loop. 
-
     nlp_doc = nlp(original_document)
 
     verb_count = 0
@@ -65,28 +62,17 @@ def verb_replace(original_document):
         if token.pos_ in ['VERB', 'AUX']:
             verb_count += 1
 
-    # print("vc:",verb_count)
-    # print("i:",i)
-
-    # if i == verb_count:
-    #     return original_document
-
     if verb_count == 0:
         return original_document
     
     for token in nlp_doc:
-        # print(token)
-        # print(spacy.explain(token.tag_), '\n')
         token_tag = spacy.explain(token.tag_)
 
         # Creating bail out statements (fail conditions) 
-        # to simplify the if section of the original code
-        # so as to be more readable (to me at least)
 
         # If the token in question isn't a verb or auxiliary verb
         # continue on to the next token in the document
         if token.pos_ not in ['VERB', 'AUX']:
-            # print(f"Not a verb: Token = \'{token}\'")
             continue
         
         # If the token tag isn't a 3rd person singular present tense verb
@@ -100,20 +86,14 @@ def verb_replace(original_document):
         # out early for now as this will not work for adverbial clauses; 
         # logic will be added in later
         if token.dep_ == 'advcl':
-            # print(f"Adverbial: Token = \'{token}\'")
             continue
 
         # Now that the fail conditions are checked, 
         # we can directly use the original logic.
         # This logic will loop through the tokens in order
         # meaning we no longer need to increment i. 
-        # The code for i is commented out below. 
         working_doc = original_document.replace(str(token),
                                                 f"will {token.lemma_}")
-                                       
-            # print("Working Doc:",working_doc)
-        # i+=1
-        # return verb_replace(working_doc, i)
                 
         # Only return if replacements have been made
         if len(working_doc) > 0:
@@ -121,6 +101,25 @@ def verb_replace(original_document):
 
     # Return the original if no replacements have been made.
     return original_document
+
+def capitalize_first_letter(text):
+    """Capitalizes the first letter of the input text if it is lowercase.
+    
+    Parameters
+    ----------
+    text : str
+        The sentence that you want to check for capitalization.
+    
+    """
+    matches = tool.check(text)
+
+    cap_rule = lambda rule: rule.ruleId == 'UPPERCASE_SENTENCE_START'
+
+    matches = [rule for rule in matches if cap_rule(rule)]
+
+    new_text = language_tool_python.utils.correct(text, matches)
+    
+    return new_text
 
 
 # nlp = spacy.load('en_core_web_sm')
@@ -138,6 +137,23 @@ og_text = "To save her father from death in the army, a young maiden secretly go
 # og_text = "A poor but hopeful boy seeks one of the five coveted golden tickets that will send him on a tour of Willy Wonka's mysterious chocolate factory."
 
 
+all_outputs = []
+
+for plot in test_cases.EXAMPLE_SENTENCES:
+    nlp_doc = nlp(plot)
+    nouns_replaced = noun_replace(plot)
+
+    current_plot_outputs = []
+    for noun_plots in nouns_replaced:
+        verbs_replaced = verb_replace(noun_plots)
+        current_plot_outputs.append(verbs_replaced)
+    
+    all_outputs.append(current_plot_outputs)
+
+
+
+
+
 nlp_doc = nlp(og_text)
 
 
@@ -150,12 +166,6 @@ verbs_replaced = verb_replace(nouns_replaced[0])
 
 
 
-
-# matches = tool.check(verbs_replaced)
-# print(matches)
-
-new_text = tool.correct(verbs_replaced)
-print(new_text)
 
 
 

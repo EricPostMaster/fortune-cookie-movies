@@ -10,8 +10,30 @@ import test_cases
 
 tool = language_tool_python.LanguageTool('en-US')
 
+# nlp = spacy.load('en_core_web_sm')    # small spaCy English language model
+nlp = spacy.load('en_core_web_trf')     # large spaCy English language model
+
+#families of related pronouns:
+pronouns_dict = {"third_male":["he", "him", "his", "himself"]
+                ,"third_female":["she", "her", "hers", "herself"]
+                ,"third_plural":["they", "them", "their", "theirs"
+                                ,"themselves"]}
+
 
 def pronoun_replace(original_document):
+    '''Replace a single family of pronouns with second-person pronouns.
+
+    Note: This function currently only replaces pronouns in sentences containing
+        a single family of pronouns, such as feminine singular (she/her) or
+        third-person plural/neutral singular (they/them). If you'd like to
+        improve the function, please create an issue and share your ideas!
+
+    Parameters
+    ----------
+    original_document : str
+        Document that needs pronouns replaced.
+    
+    '''
 
     nlp_doc = nlp(original_document)
 
@@ -191,14 +213,11 @@ def capitalize_first_letter(text):
     return new_text
 
 
-# nlp = spacy.load('en_core_web_sm')    # small spaCy English language model
-nlp = spacy.load('en_core_web_trf')     # large spaCy English language model
 
-# 
+
 all_outputs = []
 
 for plot in test_cases.EXAMPLE_SENTENCES:
-    nlp_doc = nlp(plot)
     pronouns_replaced = pronoun_replace(plot)
     nouns_replaced = noun_replace(pronouns_replaced)
 
@@ -207,14 +226,10 @@ for plot in test_cases.EXAMPLE_SENTENCES:
         verbs_replaced = verb_replace(noun_plots)
         verbs_replaced = verb_replace_advcl(verbs_replaced)
         current_plot_outputs.append(verbs_replaced)
-    
+
     all_outputs.append(current_plot_outputs)
 
-
-for plot in test_cases.EXAMPLE_SENTENCES:
-    pronouns_replaced = pronoun_replace(plot)
-    # print(pronouns_replaced)
-    
+# tool.close()
 
 
 for i in all_outputs:
@@ -225,42 +240,15 @@ for i in all_outputs:
 
 
 
-
-og_text = "To save her father from death in the army, a young maiden secretly goes in his place and becomes one of China's greatest heroines in the process."
-nlp_doc = nlp(og_text)
-
-nouns_replaced = noun_replace(og_text)
-
-verbs_replaced = verb_replace(nouns_replaced[0])
-
-# def pronoun_replace(original_document):
-
-
-
-
-
-# transitive vs reflexive verbs - save her father vs save herself
-# Not sure spaCy can tell if a verb is transitive vs reflexive - Nope.
-# possessive pronouns maybe
-
-#families of related pronouns:
-pronouns_dict = {"third_male":["he", "him", "his", "himself"]
-                ,"third_female":["she", "her", "hers", "herself"]
-                ,"third_plural":["they", "them", "their", "theirs"
-                                ,"themselves"]}
-
-
-
-
         
 
 
 
 
 
-for token in nlp(all_outputs[2][0]):
-     print (token, token.lemma_, token.dep_, token.tag_, token.pos_
-            , spacy.explain(token.tag_), token.head)
+# for token in nlp(all_outputs[2][0]):
+#      print (token, token.lemma_, token.dep_, token.tag_, token.pos_
+#             , spacy.explain(token.tag_), token.head)
 
 # for chunk in nlp(verbs_replaced).noun_chunks:
 #     print('noun chunk:',chunk
@@ -273,4 +261,4 @@ for token in nlp(all_outputs[2][0]):
 
 
 # View dependency tree
-displacy.serve(nlp_doc, style='dep')
+# displacy.serve(nlp_doc, style='dep')

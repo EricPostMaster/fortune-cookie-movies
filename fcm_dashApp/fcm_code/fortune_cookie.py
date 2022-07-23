@@ -6,12 +6,12 @@ from spacy.matcher import Matcher
 import textacy
 from textacy import extract
 import language_tool_python
-import test_cases
+from fcm_code import test_cases
 
 tool = language_tool_python.LanguageTool('en-US')
 
-# nlp = spacy.load('en_core_web_sm')    # small spaCy English language model
-nlp = spacy.load('en_core_web_trf')     # large spaCy English language model
+nlp = spacy.load('en_core_web_sm')    # small spaCy English language model
+# nlp = spacy.load('en_core_web_trf')     # large spaCy English language model
 
 #families of related pronouns:
 pronouns_dict = {"third_male":["he", "him", "his", "himself"]
@@ -213,28 +213,30 @@ def capitalize_first_letter(text):
     return new_text
 
 
+if __name__ == "__main__":
+
+    print("Testing all outputs...")
+
+    all_outputs = []
+
+    for plot in test_cases.EXAMPLE_SENTENCES:
+        pronouns_replaced = pronoun_replace(plot)
+        nouns_replaced = noun_replace(pronouns_replaced)
+
+        current_plot_outputs = []
+        for noun_plots in nouns_replaced:
+            verbs_replaced = verb_replace(noun_plots)
+            verbs_replaced = verb_replace_advcl(verbs_replaced)
+            current_plot_outputs.append(verbs_replaced)
+
+        all_outputs.append(current_plot_outputs)
+
+    # tool.close()
 
 
-all_outputs = []
-
-for plot in test_cases.EXAMPLE_SENTENCES:
-    pronouns_replaced = pronoun_replace(plot)
-    nouns_replaced = noun_replace(pronouns_replaced)
-
-    current_plot_outputs = []
-    for noun_plots in nouns_replaced:
-        verbs_replaced = verb_replace(noun_plots)
-        verbs_replaced = verb_replace_advcl(verbs_replaced)
-        current_plot_outputs.append(verbs_replaced)
-
-    all_outputs.append(current_plot_outputs)
-
-# tool.close()
-
-
-for i in all_outputs:
-    for j in i:
-        print(j,"\n----------")
+    for i in all_outputs:
+        for j in i:
+            print(j,"\n----------")
 
 
 

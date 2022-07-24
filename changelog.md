@@ -1,4 +1,16 @@
-Forked Repo on 2022-07-23
+2022-07-24
+
+* changed import statenents to potentially catch/prevent version errors (??) 
+
+* updated test_cases.json to use movieNames as keys
+
+* added a quiz page
+
+* reordered pages (About --> RandomGenerator --> Quiz)
+
+2022-07-23
+
+* forked repo (state: 2022-07-23)
 
 * created a basic app using Dash (hompage with click-for-random, quiz page, about page)
 

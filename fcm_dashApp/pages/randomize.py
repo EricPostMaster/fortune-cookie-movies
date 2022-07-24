@@ -1,11 +1,21 @@
 from base_app import app
 
-from dash import dcc
-from dash import html
+try:
+    from dash import dcc
+    from dash import html
+except ModuleNotFoundError:
+    import dash_core_components as dcc
+    import dash_html_components as html
 from dash.dependencies import Input, Output
-from fcm_code import fortune_cookie as fc #, test_cases
-import random
 
+from fcm_code import fortune_cookie as fc
+
+import random
+import json
+
+# get a list of all available films/dictionary keys here to randomly select from later
+test_cases = json.load(open("./fcm_code/test_cases.json"))
+films = list(test_cases.keys())
 
 colors = {
 'background': 'rgba(255, 245, 245, 0.85)',
@@ -38,9 +48,9 @@ layout = html.Div(
 
                 # text below the clicker
                 html.Br(),
-                html.P("This app is a work in progress, so let us know if anything isn't working or if you "
-                       "have suggestions for additional features that could be added. "
-                       ),
+                # html.P("This app is a work in progress, so let us know if anything isn't working or if you "
+                #        "have suggestions for additional features that could be added. "
+                #        ),
                 html.Br(),
             ],
          )
@@ -58,9 +68,11 @@ def update_clicker_output(n_clicks_click):
     elif n_clicks_click > 0:
 
         print("There are this many examples to choose from:")
-        print(len(fc.test_cases.EXAMPLE_SENTENCES))
+        print(len(films))
 
-        plot = fc.test_cases.EXAMPLE_SENTENCES[random.randint(0, len(fc.test_cases.EXAMPLE_SENTENCES) -1)]
+        film = films[random.randint(0, len(films) -1)]
+
+        plot = test_cases[film]["originalText"]
         pronouns_replaced = fc.pronoun_replace(plot)
         nouns_replaced = fc.noun_replace(pronouns_replaced)
 

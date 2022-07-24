@@ -1,11 +1,15 @@
-from dash import dcc
-from dash import html
+try:
+    from dash import dcc
+    from dash import html
+except ModuleNotFoundError:
+    import dash_core_components as dcc
+    import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
 # # if creating a multi-page app: use base_app to start the app server and create each page in a different file
 from base_app import app
-from pages import home, about 
+from pages import randomize, about, quiz 
 
 import os
 ## comment this bit out before deploying to AWS!!
@@ -38,9 +42,11 @@ app.layout = html.Div([
 
             dbc.Nav(id='page_nav', children=
                 [
-                    dbc.NavLink("Home", href="/home", style=navbar_style,
-                                external_link=True),
                     dbc.NavLink("About The App", href="/about", style=navbar_style,
+                                external_link=True),
+                    dbc.NavLink("Random Generator", href="/random", style=navbar_style,
+                                external_link=True),
+                    dbc.NavLink("Quiz", href="/quiz", style=navbar_style,
                                 external_link=True),
                 ],
                 fill=True,
@@ -80,11 +86,15 @@ def display_page(href):
     pathname = href.split('/')[-1]
     print('pathname is: ', href)
 
-    if (pathname == 'home') or (pathname == ''):
+    if (pathname == 'random'):
         title = "Do you feel like a fortune cookie? Well? Do ya, punk?"
-        return home.layout, (fav_cookie, title, fav_cookie)
+        return randomize.layout, (fav_cookie, title, fav_cookie)
 
-    elif pathname == 'about':
+    if (pathname == 'quiz'):
+        title = "A quiz? You can't handle a quiz!"
+        return quiz.layout, (fav_cookie, title, fav_cookie)
+
+    elif (pathname == 'about') or (pathname == ''):
         title = "Frankly, my dear, you don't give a damn... "
         return about.layout, (fav_cookie, title, fav_cookie)
     else:

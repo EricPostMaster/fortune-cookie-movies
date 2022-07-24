@@ -1,7 +1,11 @@
 from base_app import app
 
-from dash import dcc
-from dash import html
+try:
+    from dash import dcc
+    from dash import html
+except ModuleNotFoundError:
+    import dash_core_components as dcc
+    import dash_html_components as html
 
 
 layout = html.Div([
@@ -20,6 +24,11 @@ layout = html.Div([
                         
                         """),
                 html.Br(),
+                html.P("This app is a work in progress, so let us know if anything isn't working or if you "
+                       "have suggestions for additional features that could be added. "
+                       ),
+                html.Br(),
+                
                 # html.P("Idea and NLP code from")
 
             ],

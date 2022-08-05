@@ -1,0 +1,62 @@
+{
+    "Mulan": {
+        "filmName": "Mulan",
+        "originalText": "To save her father from death in the army, a young maiden secretly goes in his place and becomes one of China's greatest heroines in the process.",
+        "expectedOutput": "",
+        "comments": ""
+    },
+    "663 Squadron": {
+        "filmName": "663 Squadron",
+        "originalText": "An RAF squadron is assigned to knock out a German rocket fuel factory in Norway.",
+        "expectedText": "",
+        "comments": ""
+    },
+    "The Fellowship of the Ring": {
+        "filmName": "The Fellowship of the Ring",
+        "originalText": "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.",
+        "expectedText": "",
+        "comments": ""
+    },
+    "Ninjago": {
+        "filmName": "Ninjago",
+        "originalText": "The ninja find themselves trapped in a pyramid and must escape encroaching lava to warn Ninjago City of a new Serpentine invasion.",
+        "expectedText": "",
+        "comments": ""
+    },
+    "The Dark Knight": {
+        "filmName": "The Dark Knight",
+        "originalText": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+        "expectedText": "",
+        "comments": ""
+    },
+    "The Shawshank Redemption": {
+        "filmName": "The Shawshank Redemption",
+        "originalText": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+        "expectedText": "",
+        "comments": ""
+    },
+    "Toy Story": {
+        "filmName": "Toy Story",
+        "originalText": "A cowboy doll is profoundly threatened and jealous when a new spaceman action figure supplants him as top toy in a boy's bedroom.",
+        "expectedText": "",
+        "comments": ""
+    },
+    "Tarzan": {
+        "filmName": "Tarzan",
+        "originalText": "A man raised by gorillas must decide where he really belongs when he discovers he is a human.",
+        "expectedText": "",
+        "comments": ""
+    },
+    "Pocahontes": {
+        "filmName": "Pocahontes",
+        "originalText": "An English soldier and the daughter of an Algonquin chief share a romance when English colonists invade seventeenth century Virginia",
+        "expectedText": "",
+        "comments": ""
+    },
+    "Charlie and the Chocolate Factory": {
+        "filmName": "Charlie and the Chocolate Factory",
+        "originalText": "A poor but hopeful boy seeks one of the five coveted golden tickets that will send him on a tour of Willy Wonka's mysterious chocolate factory.",
+        "expectedText": "",
+        "comments": ""
+    }
+}

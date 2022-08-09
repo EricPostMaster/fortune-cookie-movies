@@ -1,3 +1,20 @@
+2022-08-08
+
+* Added config.py to gitignore file
+
+* Added IMDb-API api key to config.py
+
+* Created MovieDict object to get data from IMDb-API
+
+* Created data folder to store movie dataset
+
+* Note: Duplicated API calls are running. Ice Age 5: Collision Course ran twice
+  in the same run. Maybe it has something to do with updating the dictionary 
+  while it's in the same outer for loop? Not sure.
+
+
+
+
 2022-07-24
 
 * changed import statenents to potentially catch/prevent version errors (??) 

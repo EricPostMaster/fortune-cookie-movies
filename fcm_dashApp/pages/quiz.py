@@ -1,4 +1,5 @@
 from base_app import app
+import random
 
 try:
     from dash import dcc
@@ -127,6 +128,7 @@ def update_clicker_output(n_clicks_click):
 
         # get list of 5 random films for the quiz options
         quiz_choices = [film]
+        # quiz_choices = random.shuffle(quiz_choices)
 
         for i in range(len(films)):
             sel = films[random.randint(0, len(films) -1)]

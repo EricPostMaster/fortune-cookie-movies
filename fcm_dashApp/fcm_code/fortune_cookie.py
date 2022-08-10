@@ -6,12 +6,17 @@ from spacy.matcher import Matcher
 import textacy
 from textacy import extract
 import language_tool_python
-from fcm_code import test_cases
+import pickle
+# from fcm_code import test_cases
+
+# Import the data
+with open("..\\data\\movie_data.p", 'rb') as p:
+    movie_data = pickle.load(p)
 
 tool = language_tool_python.LanguageTool('en-US')
 
-nlp = spacy.load('en_core_web_sm')    # small spaCy English language model
-# nlp = spacy.load('en_core_web_trf')     # large spaCy English language model
+# nlp = spacy.load('en_core_web_sm')    # small spaCy English language model
+nlp = spacy.load('en_core_web_trf')     # large spaCy English language model
 
 #families of related pronouns:
 pronouns_dict = {"third_male":["he", "him", "his", "himself"]
@@ -219,7 +224,9 @@ if __name__ == "__main__":
 
     all_outputs = []
 
-    for plot in test_cases.EXAMPLE_SENTENCES:
+    for k in movie_data:
+        plot = movie_data[k]['plot']
+    # for plot in test_cases.EXAMPLE_SENTENCES:
         pronouns_replaced = pronoun_replace(plot)
         nouns_replaced = noun_replace(pronouns_replaced)
 

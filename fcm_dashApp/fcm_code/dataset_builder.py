@@ -29,16 +29,14 @@ class MovieDict:
         if len(self.movie_data.keys()) == 0:
             # Start with Toy Story
             toy_story_id = 'tt0114709'
-            # toy_story_id = 'tt0438097'  # This is Ice Age 2, which was giving me problems
             response = requests.get(f'{self.req_url}/{toy_story_id}')
             print("Status Code:", response.status_code)
-            # print(response.raise_for_status())
 
-            movie_title = response.json()['title']
             movie_id = response.json()['id']
+            movie_title = response.json()['title']
 
-            # Add first items to movie_data and movie_ids
-            self.movie_data[movie_id] = response.json() # movie_id is the key
+            # The unique movie ID is the key in both movie_data and movie_ids
+            self.movie_data[movie_id] = response.json()
             self.movie_ids[movie_id] = movie_title
 
             for similar in response.json()['similars']:
@@ -46,31 +44,26 @@ class MovieDict:
 
         else:
             j = 1
-            while j <= 1:
-                # print(j)
+            while j <= 1: # Pretty sure this isn't needed anymore,
+                          # but it works, so I'll deal with it later
                 try:
                     for key, value in self.movie_ids.items():
                         print("\n----------------------")
                         print("Key: ", key)
                         print("Value: ", value)
-                        print('j: ', j)
-                        # break
-                        # print("iteration ",j, " title: ",key)
-                        # i need to use the value because an id can have subtle title variations
-                        if key not in self.movie_data.keys():
 
+                        if key not in self.movie_data.keys():
                             # Add it to the movie_data dictionary with an API call
                             print("Adding title: ", value)
-
                             print(f'Request URL: {self.req_url}/{key}')
 
                             response = requests.get(f'{self.req_url}/{key}')
                             j+=1
                             print("Status Code:", response.status_code)
-                            # print("Error Message: ", response.json()['errorMessage'])
+                            print("Error Message: ", response.json()['errorMessage'])
 
-                            movie_title = response.json()['title']
                             movie_id = response.json()['id']
+                            movie_title = response.json()['title']
 
                             # Add new item to movie_data and movie_ids
                             self.movie_data[movie_id] = response.json() # movie_id is the key
@@ -82,13 +75,6 @@ class MovieDict:
                         else:
                             print(value, 'already in movie_data dict')
 
-                            
-                            # else:
-                            #     # if there is an error message,
-                            #     # I still need to add it to movie_data so it won't keep trying
-                            #     self.movie_data[key] = {}
-                            #     self.movie_data[key]['title'] = value
-                            #     self.movie_data[key]['plot'] = ""
                 except:
                     break
 
@@ -102,7 +88,6 @@ class MovieDict:
         with open(f"..\\data\\{filename}.{filetype}", "wb") as p:
             pickle.dump(self.movie_ids, p)
             print("movie ids saved")
-
 
 
 movies = MovieDict()

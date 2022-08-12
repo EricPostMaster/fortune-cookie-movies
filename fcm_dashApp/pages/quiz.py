@@ -132,9 +132,7 @@ def update_clicker_output(n_clicks_click):
 
         for _ in range(len(films)):
             sel = films[random.randint(0, len(films) -1)]
-            if sel in quiz_choices:
-                pass 
-            else: 
+            if sel not in quiz_choices:
                 quiz_choices.append(sel)
             if len(quiz_choices) == 4:
                 break

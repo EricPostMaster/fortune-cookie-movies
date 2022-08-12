@@ -36,6 +36,8 @@ def count_pronoun_types(original_document):
 
     for token in nlp(nlp_doc):
         if token.pos_ == "PRON":
+            # this structure is great for possible debugging, but the below code block could be shortened to:
+            # pronoun_types_present.extend(key for key, val in pronouns_dict.items() if str(token) in val)
             # print(token)
             for key, val in pronouns_dict.items():
                 # print(key)
@@ -67,6 +69,8 @@ def pronoun_replace(original_document, i=0):
 
     nlp_doc = nlp(original_document)
 
+    # more concise, but possibly less readable depending on the reader's python experience:
+    # pronoun_count = sum(spacy.explain(token.tag_) in ["pronoun, possessive", "pronoun, personal"] for token in nlp_doc)
     pronoun_count = 0
     for token in nlp_doc:
         if spacy.explain(token.tag_) in ["pronoun, possessive", "pronoun, personal"]:
@@ -143,6 +147,8 @@ def verb_replace(original_document, i=0):
     """
     nlp_doc = nlp(original_document)
 
+    # same as above. more concise, but possibly less readable depending on the reader's python experience:
+    # verb_count = sum(token.pos_ in ['VERB', 'AUX'] for token in nlp_doc)
     verb_count = 0
     for token in nlp_doc:
         if token.pos_ in ['VERB', 'AUX']:
@@ -174,6 +180,8 @@ def verb_replace(original_document, i=0):
 def verb_replace_advcl(original_document):
     nlp_doc = nlp(original_document)
 
+    # same as above. more concise, but possibly less readable depending on the reader's python experience:
+    # verb_count = sum(token.pos_ in ['VERB', 'AUX'] for token in nlp_doc)
     verb_count = 0
     for token in nlp_doc:
         if token.pos_ in ['VERB', 'AUX']:

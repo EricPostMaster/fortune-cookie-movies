@@ -100,7 +100,7 @@ def update_clicker_output(n_clicks_click):
         print("There are this many examples to choose from:")
         print(len(films))
 
-        film = films[random.randint(0, len(films) -1)]
+        film = films[random.randint(0, len(films) - 1)]
 
         plot = test_cases[film]["originalText"]
         pronouns_replaced = fc.pronoun_replace(plot)
@@ -115,7 +115,7 @@ def update_clicker_output(n_clicks_click):
         print(len(current_plot_outputs))
 
         if len(current_plot_outputs) > 1:
-            output = current_plot_outputs[random.randint(0, len(current_plot_outputs) -1)]
+            output = current_plot_outputs[random.randint(0, len(current_plot_outputs) - 1)]
         else:
             output = current_plot_outputs[0]
 

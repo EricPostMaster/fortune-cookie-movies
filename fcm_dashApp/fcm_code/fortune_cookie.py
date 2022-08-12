@@ -219,9 +219,7 @@ def capitalize_first_letter(text):
 
     matches = [rule for rule in matches if cap_rule(rule)]
 
-    new_text = language_tool_python.utils.correct(text, matches)
-    
-    return new_text
+    return language_tool_python.utils.correct(text, matches)
 
 
 if __name__ == "__main__":

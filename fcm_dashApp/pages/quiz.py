@@ -120,11 +120,11 @@ def update_clicker_output(n_clicks_click):
             output = current_plot_outputs[0]
 
         if n_clicks_click < 50:
-            counter = 'By the way, you have now clicked me {} times.'.format(n_clicks_click)
+            counter = f"By the way, you have now clicked me {n_clicks_click} times."
         elif 49 < n_clicks_click < 100:
-            counter = "By the way, you have now clicked me {} times. Easy there!".format(n_clicks_click),              
+            counter = f"By the way, you have now clicked me {n_clicks_click} times. Easy there!"
         else:
-            counter = "By the way, you have now clicked me {} times. It may be time for you to move on, friend".format(n_clicks_click),
+            counter = f"By the way, you have now clicked me {n_clicks_click} times. It may be time for you to move on, friend"
 
         # get list of 5 random films for the quiz options
         quiz_choices = [film]

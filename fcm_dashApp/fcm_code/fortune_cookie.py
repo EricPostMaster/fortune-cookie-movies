@@ -51,7 +51,7 @@ def count_pronoun_types(original_document):
     return len(unique_pronoun_types_present)
 
 def pronoun_replace(original_document, i=0):
-    '''Replace a single family of pronouns with second-person pronouns.
+    """Replace a single family of pronouns with second-person pronouns.
 
     Note: This function currently only replaces pronouns in sentences containing
         a single family of pronouns, such as feminine singular (she/her) or
@@ -63,7 +63,7 @@ def pronoun_replace(original_document, i=0):
     original_document : str
         Document that needs pronouns replaced.
     
-    '''
+    """
 
     nlp_doc = nlp(original_document)
 
@@ -96,7 +96,7 @@ def pronoun_replace(original_document, i=0):
 
 
 def noun_replace(original_document):
-    '''Returns a list of documents. Noun chunks that meet the specified
+    """Returns a list of documents. Noun chunks that meet the specified
     dependency and POS criteria are replaced with 'you'.
     
     Parameters
@@ -110,7 +110,7 @@ def noun_replace(original_document):
     Returns:    ['you will cry when Alice takes the ball away.',
                 'Bobby will cry when you takes the ball away.']
 
-    '''
+    """
 
     labels = ["nsubj", "nsubjpass", "attr", "ROOT",
         # "pcomp","pobj","dative","appos","dobj",
@@ -129,7 +129,7 @@ def noun_replace(original_document):
     return noun_mod_docs
 
 def verb_replace(original_document, i=0):
-    '''Returns a document replacing verbs meeting specified criteria with the
+    """Returns a document replacing verbs meeting specified criteria with the
     structure "will {lemmatized verb}"
     
     Parameters
@@ -140,7 +140,7 @@ def verb_replace(original_document, i=0):
         Counter set to 0. I should put it in the function instead. I'll do that
         later because right now it's working, and changing that will probably
         magically break it... haha (sort of)
-    '''
+    """
     nlp_doc = nlp(original_document)
 
     verb_count = 0

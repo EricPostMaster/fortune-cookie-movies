@@ -82,14 +82,14 @@ def pronoun_replace(original_document, i=0):
         if (token_tag == "pronoun, possessive"
             and str(token) != "your"):
             working_doc = re.sub(r'\b' + str(token) + r'\b', "your", original_document)
-            i+=1
+            i += 1
             return pronoun_replace(working_doc, i)
         
         if (token_tag == "pronoun, personal"
             and str(token) != "yourself"):
             # working_doc = original_document.replace(str(token), "yourself")
             working_doc = re.sub(r'\b' + str(token) + r'\b', "you", original_document)
-            i+=1
+            i += 1
             return pronoun_replace(working_doc, i)
 
     return original_document
@@ -166,7 +166,7 @@ def verb_replace(original_document, i=0):
             # working_doc = original_document.replace(str(token),f"will {token.lemma_}")
             working_doc = re.sub(r'\b' + str(token) + r'\b', f"will {token.lemma_}", original_document)
             # print("Working Doc:",working_doc)
-            i+=1
+            i += 1
             return verb_replace(working_doc, i)
 
     return original_document

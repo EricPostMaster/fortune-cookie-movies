@@ -8,10 +8,15 @@ from textacy import extract
 import language_tool_python
 import pickle
 import re
+import os
 # from fcm_code import test_cases
 
+
+MOVIE_DATA_PATH = os.path.join(".", "data", "movie_data.p")
+
+
 # Import the data
-with open("..\\data\\movie_data.p", 'rb') as p:
+with open(MOVIE_DATA_PATH, 'rb') as p:
     movie_data = pickle.load(p)
 
 tool = language_tool_python.LanguageTool('en-US')

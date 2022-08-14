@@ -43,40 +43,38 @@ class MovieDict:
                 self.movie_ids[similar['id']] = similar['title']
 
         else:
-            j = 1
-            while j <= 1: # Pretty sure this isn't needed anymore,
-                          # but it works, so I'll deal with it later
-                try:
-                    for key, value in self.movie_ids.items():
-                        print("\n----------------------")
-                        print("Key: ", key)
-                        print("Value: ", value)
 
-                        if key not in self.movie_data.keys():
-                            # Add it to the movie_data dictionary with an API call
-                            print("Adding title: ", value)
-                            print(f'Request URL: {self.req_url}/{key}')
+            for key, value in self.movie_ids.items():
+                print("\n----------------------")
+                print("Key: ", key)
+                print("Value: ", value)
 
-                            response = requests.get(f'{self.req_url}/{key}')
-                            j+=1
-                            print("Status Code:", response.status_code)
-                            print("Error Message: ", response.json()['errorMessage'])
+                if key not in self.movie_data.keys():
+                    # Add it to the movie_data dictionary with an API call
+                    print("Adding title: ", value)
+                    print(f'Request URL: {self.req_url}/{key}')
 
-                            movie_id = response.json()['id']
-                            movie_title = response.json()['title']
+                    response = requests.get(f'{self.req_url}/{key}')
+                    # j+=1
+                    print("Status Code:", response.status_code)
+                    print("Error Message: ", response.json()['errorMessage'])
 
-                            # Add new item to movie_data and movie_ids
-                            self.movie_data[movie_id] = response.json() # movie_id is the key
-                            self.movie_ids[movie_id] = movie_title
+                    movie_id = response.json()['id']
+                    movie_title = response.json()['title']
 
-                            for similar in response.json()['similars']:
-                                self.movie_ids[similar['id']] = similar['title']
+                    # Add new item to movie_data and movie_ids
+                    self.movie_data[movie_id] = response.json() # movie_id is the key
+                    self.movie_ids[movie_id] = movie_title
 
-                        else:
-                            print(value, 'already in movie_data dict')
-
-                except:
+                    # Add similar movies to movie_ids for future API requests
+                    for similar in response.json()['similars']:
+                        self.movie_ids[similar['id']] = similar['title']
+                    # print('j: ',j)
                     break
+
+                else:
+                    print(value, 'is already in the movie_data dict')
+
 
     def save_movie_data(self, filename='movie_data', filetype='p'):
         with open(f"..\\data\\{filename}.{filetype}", "wb") as p:
@@ -92,9 +90,10 @@ class MovieDict:
 
 movies = MovieDict()
 
-for i in range(0,7):  # Currently duplicating API calls, keep this under 10
+for i in range(0,15):  # Currently duplicating API calls, keep this under 10
     movies.get_movies()
     i+=1
+    print('i: ', i)
 
 movies.save_movie_data()
 movies.save_movie_ids()

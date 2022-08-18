@@ -55,7 +55,6 @@ class MovieDict:
                     print(f'Request URL: {self.req_url}/{key}')
 
                     response = requests.get(f'{self.req_url}/{key}')
-                    # j+=1
                     print("Status Code:", response.status_code)
                     print("Error Message: ", response.json()['errorMessage'])
 

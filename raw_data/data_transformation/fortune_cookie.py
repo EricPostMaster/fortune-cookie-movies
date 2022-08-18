@@ -94,7 +94,6 @@ def pronoun_replace(original_document, i=0):
 
     return original_document
 
-
 def noun_replace(original_document):
     '''Returns a list of documents. Noun chunks that meet the specified
     dependency and POS criteria are replaced with 'you'.
@@ -266,9 +265,6 @@ if __name__ == "__main__":
 #     verbs_replaced = verb_replace_advcl(verbs_replaced)
 #     print(verbs_replaced)
 #     # current_plot_outputs.append(verbs_replaced)
-
-        
-
 
 
 

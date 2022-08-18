@@ -1,17 +1,12 @@
-import time
-from numpy import dtype
 import spacy
-from spacy import displacy
-from spacy.matcher import Matcher
-import textacy
-from textacy import extract
+# from spacy import displacy
 import language_tool_python
 import pickle
 import re
-# from fcm_code import test_cases
+import pandas as pd
 
 # Import the data
-with open("..\\data\\movie_data.p", 'rb') as p:
+with open("..\\data_retrieval\\pickled_raw_data\\movie_data.p", 'rb') as p:
     movie_data = pickle.load(p)
 
 tool = language_tool_python.LanguageTool('en-US')
@@ -222,49 +217,37 @@ def capitalize_first_letter(text):
     
     return new_text
 
-
 if __name__ == "__main__":
 
-    print("Testing all outputs...")
+    print("Transforming text...")
 
-    all_outputs = []
+    column_names = ['movie_id','movie_title', 'plot']
+    df = pd.DataFrame(columns=column_names)
+
+    counter = 1
+    total_movies = len(movie_data.keys())
 
     for k in movie_data:
+        print(f"Progress: Movie {counter} of {total_movies}")
+        counter +=1
         plot = movie_data[k]['plot']
-    # for plot in test_cases.EXAMPLE_SENTENCES:
+        title = movie_data[k]['title']
+        movie_id = movie_data[k]['id']
         unique_pronoun_types = count_pronoun_types(plot)
         if unique_pronoun_types <= 1:
             pronouns_replaced = pronoun_replace(plot)
             nouns_replaced = noun_replace(pronouns_replaced)
 
-            current_plot_outputs = []
             for noun_plots in nouns_replaced:
+                title_plot = []
                 verbs_replaced = verb_replace(noun_plots)
                 verbs_replaced = verb_replace_advcl(verbs_replaced)
-                current_plot_outputs.append(verbs_replaced)
-                print(verbs_replaced,"\n----------")
+                title_plot.append(movie_id)
+                title_plot.append(title)
+                title_plot.append(verbs_replaced)
+                df.loc[len(df)] = title_plot
 
-            all_outputs.append(current_plot_outputs)
-
-    # for i in all_outputs:
-    #     for j in i:
-    #         print(j,"\n----------")
-
-
-# plot = 'Gru meets his long-lost, charming, cheerful, and more successful twin brother Dru, who wants to team up with him for one last criminal heist.'
-
-# unique_pronoun_types = count_pronoun_types(plot)
-# if unique_pronoun_types <= 1:
-#     pronouns_replaced = pronoun_replace(plot)
-# nouns_replaced = noun_replace(pronouns_replaced)
-
-
-# # current_plot_outputs = []
-# for noun_plots in nouns_replaced:
-#     verbs_replaced = verb_replace(noun_plots)
-#     verbs_replaced = verb_replace_advcl(verbs_replaced)
-#     print(verbs_replaced)
-#     # current_plot_outputs.append(verbs_replaced)
+    df.to_csv(".\\transformed_data\\all_titles_and_plots.csv")
 
 
 
@@ -280,8 +263,6 @@ if __name__ == "__main__":
 #           ,'\nroot head text:', chunk.root.head.text
 #           ,'\nchunk part of speech',chunk.root.pos_
 #           ,'\n-------------------')
-
-
 
 # View dependency tree
 # displacy.serve(nlp_doc, style='dep')

@@ -19,11 +19,11 @@ cwd = os.getcwd()
 print(cwd)
 
 navbar_style = {
-    'font-family': 'Rock Salt',
+    'font-family': 'Radio Canada',
     'padding': '0.6rem',
     # 'color': 'white', #'#595959',
     'font-weight': '600',
-    'font-size': '1.3rem',
+    'font-size': '1.5rem',
     'padding-top': '1rem',
     'padding-left': '1.5rem',
     'padding-right':'1.5rem',
@@ -34,7 +34,7 @@ fav_cookie = html.Img(src=app.get_asset_url('Fortune_cookie.png'),
                       style={'height': '2%', 'width': '2%', 'margin-right': '1rem'},
                       )
 
-app.title = "Fortunate Me"
+app.title = "Fortune Cookie Movies"
 
 app.layout = html.Div([
     html.Div([
@@ -42,11 +42,11 @@ app.layout = html.Div([
 
             dbc.Nav(id='page_nav', children=
                 [
-                    dbc.NavLink("About The App", href="/about", style=navbar_style,
+                    dbc.NavLink("About", href="/about", style=navbar_style,
                                 external_link=True),
-                    dbc.NavLink("Random Generator", href="/random", style=navbar_style,
+                    dbc.NavLink("Test Your Knowledge", href="/quiz", style=navbar_style,
                                 external_link=True),
-                    dbc.NavLink("Quiz", href="/quiz", style=navbar_style,
+                    dbc.NavLink("Random Fortune", href="/random", style=navbar_style,
                                 external_link=True),
                 ],
                 fill=True,

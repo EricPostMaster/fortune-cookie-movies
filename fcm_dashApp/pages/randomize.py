@@ -8,14 +8,14 @@ except ModuleNotFoundError:
     import dash_html_components as html
 from dash.dependencies import Input, Output
 
-from fcm_code import fortune_cookie as fc
-
 import random
-import json
+import pandas as pd
+import os
 
 # get a list of all available films/dictionary keys here to randomly select from later
-test_cases = json.load(open("./fcm_code/test_cases.json"))
-films = list(test_cases.keys())
+movie_plots = pd.read_csv(".\\data\\good_only_titles_and_plots.csv"
+                         ,usecols=['movie_id','movie_title','plot'])
+
 
 colors = {
 'background': 'rgba(255, 245, 245, 0.85)',
@@ -35,11 +35,14 @@ layout = html.Div(
                     html.Button('Click Me', id='clicker'),
 
                     html.Div(id='clicker_output',
-                             children='Find out what your future has in store...',
+                            #  children='Find out what your future has in store...',
                              style={'color': colors['text'],
                                     'margin-left': '10px',
-                                    'padding-top': '10px',
-                                    'padding-bottom': '10px'}
+                                    'padding-top': '20px',
+                                    'padding-bottom': '20px',
+                                    # 'background-color': 'white'
+                                    
+                                    }
                              )
                 ],
                     style={'text-align': 'center',
@@ -64,30 +67,22 @@ layout = html.Div(
 def update_clicker_output(n_clicks_click):
 
     if n_clicks_click is None:
-        return 'Find out what your future has in store...'
+        return '' #'Find out what your future has in store...'
     elif n_clicks_click > 0:
 
-        print("There are this many examples to choose from:")
-        print(len(films))
+        movie_index = random.randint(0, len(movie_plots) -1)
+        plot_display = movie_plots['plot'].loc[movie_index]
+        plot_movie = movie_plots['movie_title'].loc[movie_index]
 
-        film = films[random.randint(0, len(films) -1)]
+        lucky_numbers = [random.randint(1, 99) for _ in range(6)]
 
-        plot = test_cases[film]["originalText"]
-        pronouns_replaced = fc.pronoun_replace(plot)
-        nouns_replaced = fc.noun_replace(pronouns_replaced)
+        num_output = f"Lucky Numbers: {' '.join(map(str, lucky_numbers))}"
 
-        current_plot_outputs = []
-        for noun_plots in nouns_replaced:
-            verbs_replaced = fc.verb_replace(noun_plots)
-            verbs_replaced = fc.verb_replace_advcl(verbs_replaced)
-            current_plot_outputs.append(verbs_replaced)
+        output = plot_display
 
-        print(len(current_plot_outputs))
-
-        if len(current_plot_outputs) > 1:
-            output = current_plot_outputs[random.randint(0, len(current_plot_outputs) -1)]
-        else:
-            output = current_plot_outputs[0]
+        # output = plot_display
+        print("Fortune: ", plot_display)
+        print("Movie: ", plot_movie)
 
         if n_clicks_click < 50:
             counter = 'By the way, you have now clicked me {} times.'.format(n_clicks_click)
@@ -96,10 +91,13 @@ def update_clicker_output(n_clicks_click):
         else:
             counter = "By the way, you have now clicked me {} times. It may be time for you to move on, friend".format(n_clicks_click),
     
-    return html.Div([
-        # html.H4(current_plot_outputs),
-        html.H4(output),
-        html.P(counter), 
-        html.Br(),
-    ])
+    return html.Div(
+                    [
+                    # html.H4(current_plot_outputs),
+                    html.P(output, style={'font-family': 'serif'}),
+                    html.P(num_output, style={'font-family': 'serif'}), 
+                    # html.Br(),
+                    ],
+                    className='fc-fortune'
+    )
                 

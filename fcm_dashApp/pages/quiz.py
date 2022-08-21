@@ -1,4 +1,5 @@
 from base_app import app
+import random
 
 try:
     from dash import dcc
@@ -99,7 +100,7 @@ def update_clicker_output(n_clicks_click):
         print("There are this many examples to choose from:")
         print(len(films))
 
-        film = films[random.randint(0, len(films) -1)]
+        film = films[random.randint(0, len(films) - 1)]
 
         plot = test_cases[film]["originalText"]
         pronouns_replaced = fc.pronoun_replace(plot)
@@ -114,25 +115,24 @@ def update_clicker_output(n_clicks_click):
         print(len(current_plot_outputs))
 
         if len(current_plot_outputs) > 1:
-            output = current_plot_outputs[random.randint(0, len(current_plot_outputs) -1)]
+            output = current_plot_outputs[random.randint(0, len(current_plot_outputs) - 1)]
         else:
             output = current_plot_outputs[0]
 
         if n_clicks_click < 50:
-            counter = 'By the way, you have now clicked me {} times.'.format(n_clicks_click)
+            counter = f"By the way, you have now clicked me {n_clicks_click} times."
         elif 49 < n_clicks_click < 100:
-            counter = "By the way, you have now clicked me {} times. Easy there!".format(n_clicks_click),              
+            counter = f"By the way, you have now clicked me {n_clicks_click} times. Easy there!"
         else:
-            counter = "By the way, you have now clicked me {} times. It may be time for you to move on, friend".format(n_clicks_click),
+            counter = f"By the way, you have now clicked me {n_clicks_click} times. It may be time for you to move on, friend"
 
         # get list of 5 random films for the quiz options
         quiz_choices = [film]
+        # quiz_choices = random.shuffle(quiz_choices)
 
-        for i in range(len(films)):
+        for _ in range(len(films)):
             sel = films[random.randint(0, len(films) -1)]
-            if sel in quiz_choices:
-                pass 
-            else: 
+            if sel not in quiz_choices:
                 quiz_choices.append(sel)
             if len(quiz_choices) == 4:
                 break

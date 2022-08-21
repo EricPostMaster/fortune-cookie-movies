@@ -1,7 +1,12 @@
 import requests
 from config import api_key
-from os.path import exists
+import os
 import pickle
+
+
+MOVIE_DATA_PATH = os.path.join(".", "data", "movie_data.p")
+MOVIE_ID_PATH = os.path.join(".", "data", "movie_ids.p")
+
 
 class MovieDict:
     """
@@ -10,11 +15,11 @@ class MovieDict:
     def __init__(self):
         """
         """
-        movie_dict_exists = exists("..\\data\\movie_data.p")
+        movie_dict_exists = os.path.exists(MOVIE_DATA_PATH)
         if movie_dict_exists == True:
-            with open("..\\data\\movie_data.p", 'rb') as p:
+            with open(MOVIE_DATA_PATH, 'rb') as p:
                 self.movie_data = pickle.load(p)
-            with open("..\\data\\movie_ids.p", 'rb') as p:
+            with open(MOVIE_ID_PATH, 'rb') as p:
                 self.movie_ids = pickle.load(p)
         else:
             self.movie_data = {}
@@ -76,20 +81,22 @@ class MovieDict:
 
 
     def save_movie_data(self, filename='movie_data', filetype='p'):
-        with open(f"..\\data\\{filename}.{filetype}", "wb") as p:
+        filepath = os.path.join("..", "data", f"{filename}.{filetype}")
+        with open(filepath, "wb") as p:
             pickle.dump(self.movie_data, p)
         print("movie data saved")
 
     
     def save_movie_ids(self, filename='movie_ids', filetype='p'):
-        with open(f"..\\data\\{filename}.{filetype}", "wb") as p:
+        filepath = os.path.join("..", "data", f"{filename}.{filetype}")
+        with open(filepath, "wb") as p:
             pickle.dump(self.movie_ids, p)
             print("movie ids saved")
 
 
 movies = MovieDict()
 
-for i in range(0,2):
+for i in range(10):
     movies.get_movies()
     i+=1
     print('i: ', i)

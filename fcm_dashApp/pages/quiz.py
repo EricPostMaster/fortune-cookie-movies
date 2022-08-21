@@ -117,13 +117,13 @@ def update_clicker_output(n_clicks_click):
 
         # Message based on number of clicks
         if n_clicks_click == 1:
-            counter = 'By the way, you have eaten {} fortune cookie.'.format(n_clicks_click)
+            counter = f"By the way, you have eaten {n_clicks_click} fortune cookie."
         elif 1 < n_clicks_click < 10:
-            counter = 'By the way, you have eaten {} fortune cookies.'.format(n_clicks_click)
+            counter = f"By the way, you have eaten {n_clicks_click} fortune cookies."
         elif 9 < n_clicks_click < 25:
-            counter = "You've polished off {} fortune cookies. Still going strong???".format(n_clicks_click),
+            counter = f"You've polished off {n_clicks_click} fortune cookies. Still going strong???"
         else:
-            counter = "Wow, {} fortune cookies! You're the type that gets kicked out of buffets, am I right?".format(n_clicks_click),
+            counter = f"Wow, {n_clicks_click} fortune cookies! You're the type that gets kicked out of buffets, am I right?"
 
 
     return (

@@ -3,10 +3,13 @@ import spacy
 import language_tool_python
 import pickle
 import re
+import os
 import pandas as pd
 
+MOVIE_DATA_PATH = os.path.join(".", "data", "movie_data.p")
+
 # Import the data
-with open("..\\data_retrieval\\pickled_raw_data\\movie_data.p", 'rb') as p:
+with open(MOVIE_DATA_PATH, 'rb') as p:
     movie_data = pickle.load(p)
 
 tool = language_tool_python.LanguageTool('en-US')
@@ -31,6 +34,8 @@ def count_pronoun_types(original_document):
 
     for token in nlp(nlp_doc):
         if token.pos_ == "PRON":
+            # this structure is great for possible debugging, but the below code block could be shortened to:
+            # pronoun_types_present.extend(key for key, val in pronouns_dict.items() if str(token) in val)
             # print(token)
             for key, val in pronouns_dict.items():
                 # print(key)
@@ -46,7 +51,7 @@ def count_pronoun_types(original_document):
     return len(unique_pronoun_types_present)
 
 def pronoun_replace(original_document, i=0):
-    '''Replace a single family of pronouns with second-person pronouns.
+    """Replace a single family of pronouns with second-person pronouns.
 
     Note: This function currently only replaces pronouns in sentences containing
         a single family of pronouns, such as feminine singular (she/her) or
@@ -58,14 +63,16 @@ def pronoun_replace(original_document, i=0):
     original_document : str
         Document that needs pronouns replaced.
     
-    '''
+    """
 
     nlp_doc = nlp(original_document)
 
+    # more concise, but possibly less readable depending on the reader's python experience:
+    # pronoun_count = sum(spacy.explain(token.tag_) in ["pronoun, possessive", "pronoun, personal"] for token in nlp_doc)
     pronoun_count = 0
     for token in nlp_doc:
         if spacy.explain(token.tag_) in ["pronoun, possessive", "pronoun, personal"]:
-            pronoun_count +=1
+            pronoun_count += 1
 
     if i == pronoun_count:
         return original_document
@@ -77,20 +84,20 @@ def pronoun_replace(original_document, i=0):
         if (token_tag == "pronoun, possessive"
             and str(token) != "your"):
             working_doc = re.sub(r'\b' + str(token) + r'\b', "your", original_document)
-            i+=1
+            i += 1
             return pronoun_replace(working_doc, i)
         
         if (token_tag == "pronoun, personal"
             and str(token) != "yourself"):
             # working_doc = original_document.replace(str(token), "yourself")
             working_doc = re.sub(r'\b' + str(token) + r'\b', "you", original_document)
-            i+=1
+            i += 1
             return pronoun_replace(working_doc, i)
 
     return original_document
 
 def noun_replace(original_document):
-    '''Returns a list of documents. Noun chunks that meet the specified
+    """Returns a list of documents. Noun chunks that meet the specified
     dependency and POS criteria are replaced with 'you'.
     
     Parameters
@@ -104,7 +111,7 @@ def noun_replace(original_document):
     Returns:    ['you will cry when Alice takes the ball away.',
                 'Bobby will cry when you takes the ball away.']
 
-    '''
+    """
 
     labels = ["nsubj", "nsubjpass", "attr", "ROOT",
         # "pcomp","pobj","dative","appos","dobj",
@@ -123,7 +130,7 @@ def noun_replace(original_document):
     return noun_mod_docs
 
 def verb_replace(original_document, i=0):
-    '''Returns a document replacing verbs meeting specified criteria with the
+    """Returns a document replacing verbs meeting specified criteria with the
     structure "will {lemmatized verb}"
     
     Parameters
@@ -134,13 +141,15 @@ def verb_replace(original_document, i=0):
         Counter set to 0. I should put it in the function instead. I'll do that
         later because right now it's working, and changing that will probably
         magically break it... haha (sort of)
-    '''
+    """
     nlp_doc = nlp(original_document)
 
+    # same as above. more concise, but possibly less readable depending on the reader's python experience:
+    # verb_count = sum(token.pos_ in ['VERB', 'AUX'] for token in nlp_doc)
     verb_count = 0
     for token in nlp_doc:
         if token.pos_ in ['VERB', 'AUX']:
-            verb_count +=1
+            verb_count += 1
     # print("vc:",verb_count)
     # print("i:",i)
 
@@ -160,7 +169,7 @@ def verb_replace(original_document, i=0):
             # working_doc = original_document.replace(str(token),f"will {token.lemma_}")
             working_doc = re.sub(r'\b' + str(token) + r'\b', f"will {token.lemma_}", original_document)
             # print("Working Doc:",working_doc)
-            i+=1
+            i += 1
             return verb_replace(working_doc, i)
 
     return original_document
@@ -168,6 +177,8 @@ def verb_replace(original_document, i=0):
 def verb_replace_advcl(original_document):
     nlp_doc = nlp(original_document)
 
+    # same as above. more concise, but possibly less readable depending on the reader's python experience:
+    # verb_count = sum(token.pos_ in ['VERB', 'AUX'] for token in nlp_doc)
     verb_count = 0
     for token in nlp_doc:
         if token.pos_ in ['VERB', 'AUX']:
@@ -212,10 +223,8 @@ def capitalize_first_letter(text):
     cap_rule = lambda rule: rule.ruleId == 'UPPERCASE_SENTENCE_START'
 
     matches = [rule for rule in matches if cap_rule(rule)]
-
-    new_text = language_tool_python.utils.correct(text, matches)
     
-    return new_text
+    return language_tool_python.utils.correct(text, matches)
 
 if __name__ == "__main__":
 
@@ -229,7 +238,7 @@ if __name__ == "__main__":
 
     for k in movie_data:
         print(f"Progress: Movie {counter} of {total_movies}")
-        counter +=1
+        counter += 1
         plot = movie_data[k]['plot']
         title = movie_data[k]['title']
         movie_id = movie_data[k]['id']

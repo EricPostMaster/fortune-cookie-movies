@@ -1,0 +1,7 @@
+version: "3.0"
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8050:8050"

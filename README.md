@@ -7,7 +7,42 @@ This repo is a project currently in progress to create some sort of application 
 Thanks for visiting!
 
 ## Running the web app
-Make sure you're in `fcm_dashApp/` and run `python fcm_app.py`
+
+There are a few ways to run this app, all shown below. Once you run one of the commands below the app should be available at [http://localhost:8050](http://localhost:8050).
+
+### With Docker Compose
+
+Getting started with Docker Compose is probably the easiest, assuming you have Docker and Docker Compose installed already. If you do then just run the below:
+
+```
+docker-compose up -d
+```
+
+The image should be automatically built as part of the above command. To build the image without starting the service you can run the following:
+
+```
+docker-compose build
+```
+
+To stop the docker-compose application run the below:
+
+```
+docker-compose down
+```
+
+### With Docker
+
+If you have Docker installed, but not Docker Compose, that's okay. First we need to build the image:
+
+```
+docker build --tag fcm-app .
+```
+
+Once the image is built you can run the app with the below Docker command:
+
+```
+docker run -p 8050:8050 fcm-app
+```
 
 #### Possible errors
 ```

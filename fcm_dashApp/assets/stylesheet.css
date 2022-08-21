@@ -25,7 +25,8 @@ insets/offsets dove gray: #e6e6e6   rgb(230, 230, 230)
 */
 
 
-@import url(https://fonts.googleapis.com/css2?family=Rock+Salt&display=swa);
+@import url(https://fonts.googleapis.com/css2?family=Radio+Canada&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap);
 @import url(https://fonts.googleapis.com/css?family=NTR);
 @import url(http://fontlibrary.org/face/iranian-sans)
 
@@ -162,9 +163,27 @@ h4 { font-size: 2.6rem; line-height: 1.35; letter-spacing: -.08rem; margin-botto
 h5 { font-size: 2.2rem; line-height: 1.5;  letter-spacing: -.05rem; margin-bottom: 0.6rem; margin-top: 0.6rem;}
 h6 { font-size: 2.0rem; line-height: 1.6;  letter-spacing: 0; margin-bottom: 0.75rem; margin-top: 0.75rem;}
 
-p {
-  margin-top: 0; }
+p { font-family: 'Radio Canada';  margin-top: 0; }
 
+
+/* Fortune cookie paper from CodePen: https://codepen.io/jkantner/pen/VJMGLR */
+.fc-fortune {
+  background:
+    linear-gradient(#fff0 .75em,#fff 0 5.25em,#fff0 0),
+    linear-gradient(90deg,currentColor 3em,#fff 0 48.25em,currentColor 0);
+  color: #00c;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.75em 1.5em 0.75em 3.75em;
+  text-align: center;
+  /* width: 26em; */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  height: 5em;
+  /* left: 0;
+  transform: scale(0,1);
+  transform-origin: 50% 32%; */
+}
 
 /* Blockquotes
 �������������������������������������������������� */
@@ -182,7 +201,7 @@ blockquote {
 a {
   color: #990033; }
 a:hover {
-  color: #00ffcc; }
+  color: #dd004a; }
 
 
 /* Buttons
@@ -195,7 +214,7 @@ input[type="button"] {
   display: inline-block;
   height: 3.8rem;
   color: #333333;
-  font-family: 'Rock Salt';
+  font-family: 'Radio Canada';
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -536,7 +555,7 @@ there.
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-family: Rock Salt;
+    font-family: 'Radio Canada';
     backgroundColor: #f9f9f9;
     borderColor: white;
     borderBottom: 3px solid #d6d6d6;

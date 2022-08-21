@@ -1,4 +1,5 @@
 from base_app import app
+import random
 
 try:
     from dash import dcc
@@ -9,14 +10,14 @@ except ModuleNotFoundError:
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
-from fcm_code import fortune_cookie as fc
-
+import pandas as pd
 import random
-import json
 
 # get a list of all available films/dictionary keys here to randomly select from list of films
-test_cases = json.load(open("./fcm_code/test_cases.json"))
-films = list(test_cases.keys())
+movie_plots = pd.read_csv(".\\data\\good_only_titles_and_plots.csv"
+                         ,usecols=['movie_id','movie_title','plot'])
+
+
 
 colors = {
 'background': 'rgba(255, 245, 245, 0.85)',
@@ -28,12 +29,13 @@ colors = {
 layout = html.Div(
             id='center_content_container', children=[
 
-                html.P("Those who don't remember the past are destined to repeat it... "
-                       "Do you remember the past? Which movie is this future from? "),
+                # html.P("Those who don't remember the past are destined to repeat it... "
+                #        "Do you remember the past? Which movie is this future from? "),
+
 
                 # clicker div
                 html.Div([
-                    html.P('Click here to decipher your fortune...'),
+                    html.P('Click here to test your knowledge...'), # decipher your fortune...'),
                     html.Button('Quiz Me', id='clicker_quiz'),
 
                     html.Div(id='fortune_output',
@@ -45,7 +47,6 @@ layout = html.Div(
                              ),
 
                 ],
-                    className="five columns",
                     style={'text-align': 'center',
                            'padding-top': '3rem'}
                 ),
@@ -70,7 +71,6 @@ layout = html.Div(
                                     'padding-bottom': '10px'}
                              )
                 ],
-                    className="six columns offset-by-one",
                     style={'text-align': 'center',
                            'padding-top': '3rem'}
                 ),
@@ -96,58 +96,51 @@ def update_clicker_output(n_clicks_click):
         raise PreventUpdate
     elif n_clicks_click > 0:
 
-        print("There are this many examples to choose from:")
-        print(len(films))
+        # Subset dataset, remove duplicates, get 4 movies for quiz
+        min_movies_needed = (movie_plots['movie_id'].value_counts()
+                            [movie_plots['movie_id'].value_counts()>1]
+                            .sum()+1)
 
-        film = films[random.randint(0, len(films) -1)]
+        quiz_plots = movie_plots.sample(n=min_movies_needed, ignore_index=True)
+        quiz_plots.drop_duplicates(subset='movie_id', inplace=True)
+        quiz_plots = quiz_plots.head(4)
 
-        plot = test_cases[film]["originalText"]
-        pronouns_replaced = fc.pronoun_replace(plot)
-        nouns_replaced = fc.noun_replace(pronouns_replaced)
+        # plot and movies list for multiple choice answers
+        quiz_plot = quiz_plots.loc[0]['plot']
+        quiz_answer = quiz_plots.loc[0]['movie_title']
+        quiz_choices = list(quiz_plots['movie_title'])
+        random.shuffle(quiz_choices)
 
-        current_plot_outputs = []
-        for noun_plots in nouns_replaced:
-            verbs_replaced = fc.verb_replace(noun_plots)
-            verbs_replaced = fc.verb_replace_advcl(verbs_replaced)
-            current_plot_outputs.append(verbs_replaced)
+        lucky_numbers = [random.randint(1, 99) for _ in range(6)]
 
-        print(len(current_plot_outputs))
+        num_output = f"Lucky Numbers: {' '.join(map(str, lucky_numbers))}"
 
-        if len(current_plot_outputs) > 1:
-            output = current_plot_outputs[random.randint(0, len(current_plot_outputs) -1)]
+        # Message based on number of clicks
+        if n_clicks_click == 1:
+            counter = 'By the way, you have eaten {} fortune cookie.'.format(n_clicks_click)
+        elif 1 < n_clicks_click < 10:
+            counter = 'By the way, you have eaten {} fortune cookies.'.format(n_clicks_click)
+        elif 9 < n_clicks_click < 25:
+            counter = "You've polished off {} fortune cookies. Still going strong???".format(n_clicks_click),
         else:
-            output = current_plot_outputs[0]
+            counter = "Wow, {} fortune cookies! You're the type that gets kicked out of buffets, am I right?".format(n_clicks_click),
 
-        if n_clicks_click < 50:
-            counter = 'By the way, you have now clicked me {} times.'.format(n_clicks_click)
-        elif 49 < n_clicks_click < 100:
-            counter = "By the way, you have now clicked me {} times. Easy there!".format(n_clicks_click),              
-        else:
-            counter = "By the way, you have now clicked me {} times. It may be time for you to move on, friend".format(n_clicks_click),
 
-        # get list of 5 random films for the quiz options
-        quiz_choices = [film]
-
-        for i in range(len(films)):
-            sel = films[random.randint(0, len(films) -1)]
-            if sel in quiz_choices:
-                pass 
-            else: 
-                quiz_choices.append(sel)
-            if len(quiz_choices) == 4:
-                break
-    
     return (
-                html.Div([
-                    html.H4(output),
-                    html.P(counter), 
-                    html.Br(),
-                ]),
+                html.Div(
+                        [
+                        html.P(quiz_plot, style={'font-family': 'serif'}),
+                        html.P(num_output, style={'font-family': 'serif'}), 
+                        # html.P(counter),
+                        # html.Br(),
+                        ],
+                        className='fc-fortune'
+                ),
                 html.Div([
                     html.P("Which film should you watch in order to see how your destiny will play out?"),
                     dcc.RadioItems(id="quiz_options", options=[ {"label": i, "value": i} for i in quiz_choices], value=None )
                 ]),
-                film
+                quiz_answer
             )
                 
 

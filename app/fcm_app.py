@@ -102,5 +102,5 @@ def display_page(href):
 
 
 if __name__ == '__main__':
-    app.run_server(port=8050, debug=True) # use for dev
-    # app.run_server(host='0.0.0.0', port=8050, debug=False) # use when deploying
+    # app.run_server(port=8050, debug=True) # use for dev
+    app.run_server(host='0.0.0.0', port=8050, debug=False) # use when deploying

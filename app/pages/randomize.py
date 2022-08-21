@@ -13,9 +13,9 @@ import pandas as pd
 import os
 
 # get a list of all available films/dictionary keys here to randomly select from later
-movie_plots = pd.read_csv(".\\data\\good_only_titles_and_plots.csv"
-                         ,usecols=['movie_id','movie_title','plot'])
+movie_plots = pd.read_csv("./data/good_only_titles_and_plots.csv", usecols=['movie_id','movie_title','plot'])
 
+# ./data/good_only_titles_and_plots.csv
 
 colors = {
 'background': 'rgba(255, 245, 245, 0.85)',

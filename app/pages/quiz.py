@@ -14,8 +14,7 @@ import pandas as pd
 import random
 
 # get a list of all available films/dictionary keys here to randomly select from list of films
-movie_plots = pd.read_csv(".\\data\\good_only_titles_and_plots.csv"
-                         ,usecols=['movie_id','movie_title','plot'])
+movie_plots = pd.read_csv("./data/good_only_titles_and_plots.csv", usecols=['movie_id','movie_title','plot'])
 
 
 

@@ -2,7 +2,7 @@
 
 **Question:** What if fortune cookies were filled with movie plots where you were the main character???
 
-**Answer:** They'd be way cooler!
+**Answer:** They'd be way cooler. [Try it yourself here!](http://3.17.184.0:8050/)
 
 ## How it started:
 
@@ -15,7 +15,7 @@ Thus, Fortune Cookie Movies was born. :film_projector::arrow_right::fortune_cook
 
 ## How it's going:
 
-Try out the [Fortune Cookie Movies app](http://http://3.17.184.0:8050/) yourself! Grab some extra buttery popcorn and test your movie knowledge with a fortune cookie movie quiz or tempt fate with a random movie fortune. Adventure awaits! 
+Try out the [Fortune Cookie Movies app](http://3.17.184.0:8050/) yourself! Grab some extra buttery popcorn and test your movie knowledge with a fortune cookie movie quiz or tempt fate with a random movie fortune. Adventure awaits! 
 
 Here's what the app looks like:
 

@@ -46,11 +46,12 @@ The app is built on Plotly Dash. It is Dockerized and pushed to AWS Elastic Cont
 
 This app exists because cool people contributed a bit of their time and expertise to make it a reality. You are welcome to submit ideas and improvements by creating issues and pull requests on this repo!
 
-Cool contributors:
+Contributors:
 * [Jay Seabrum](https://github.com/xjseabrum)
 * [Teresa Behr](https://github.com/teresabehr)
 * [Michael Long](https://github.com/michael-long88)
 * [Caleb Keller](https://github.com/wrathagom)
+* [Eric Sims (that's me)](https://github.com/EricPostMaster)
 
 ### Running the web app
 

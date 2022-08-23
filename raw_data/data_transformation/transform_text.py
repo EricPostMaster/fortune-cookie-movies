@@ -24,8 +24,22 @@ pronouns_dict = {"third_male":["he", "him", "his", "himself"]
                                 ,"themselves"]}
 
 
-
 def count_pronoun_types(original_document):
+    """Counts the number of related pronoun types in a sentence.
+    
+    Parameters
+    ----------
+    original_document : str
+        Document that needs pronoun types counted.
+
+    Examples:
+        "He will find his destiny" has a single type because both "he" and "his"
+        are both third person male.
+
+        "She will discover their secret" has two types because "she" is third 
+        person female, and "their" is third person plural.
+    
+    """
     nlp_doc = nlp(original_document)
 
     ######################
@@ -36,19 +50,14 @@ def count_pronoun_types(original_document):
         if token.pos_ == "PRON":
             # this structure is great for possible debugging, but the below code block could be shortened to:
             # pronoun_types_present.extend(key for key, val in pronouns_dict.items() if str(token) in val)
-            # print(token)
             for key, val in pronouns_dict.items():
-                # print(key)
-                # print(val)
                 if str(token) in val:
                     pronoun_types_present.append(key)
 
     unique_pronoun_types_present = set(pronoun_types_present)
 
-    # if len(unique_pronoun_types_present)>1:
-    #     return original_document
-
     return len(unique_pronoun_types_present)
+
 
 def pronoun_replace(original_document, i=0):
     """Replace a single family of pronouns with second-person pronouns.
@@ -89,12 +98,12 @@ def pronoun_replace(original_document, i=0):
         
         if (token_tag == "pronoun, personal"
             and str(token) != "yourself"):
-            # working_doc = original_document.replace(str(token), "yourself")
             working_doc = re.sub(r'\b' + str(token) + r'\b', "you", original_document)
             i += 1
             return pronoun_replace(working_doc, i)
 
     return original_document
+
 
 def noun_replace(original_document):
     """Returns a list of documents. Noun chunks that meet the specified
@@ -129,6 +138,7 @@ def noun_replace(original_document):
     
     return noun_mod_docs
 
+
 def verb_replace(original_document, i=0):
     """Returns a document replacing verbs meeting specified criteria with the
     structure "will {lemmatized verb}"
@@ -150,15 +160,11 @@ def verb_replace(original_document, i=0):
     for token in nlp_doc:
         if token.pos_ in ['VERB', 'AUX']:
             verb_count += 1
-    # print("vc:",verb_count)
-    # print("i:",i)
 
     if i == verb_count:
         return original_document
 
     for token in nlp_doc:
-        # print(token)
-        # print(spacy.explain(token.tag_), '\n')
         token_tag = spacy.explain(token.tag_)
 
         if (token.pos_ in ['VERB', 'AUX']
@@ -166,15 +172,22 @@ def verb_replace(original_document, i=0):
                              ,"verb, non-3rd person singular present"]
             and token.dep_ != 'advcl'):
             # This will not work for adverbial clauses, so add that logic in later
-            # working_doc = original_document.replace(str(token),f"will {token.lemma_}")
             working_doc = re.sub(r'\b' + str(token) + r'\b', f"will {token.lemma_}", original_document)
-            # print("Working Doc:",working_doc)
             i += 1
             return verb_replace(working_doc, i)
 
     return original_document
 
+
 def verb_replace_advcl(original_document):
+    """Replace verbs that are part of adverbial clauses.
+
+    Parameters
+    ----------
+    original_document : str
+        Document that needs pronouns replaced.
+    
+    """
     nlp_doc = nlp(original_document)
 
     # same as above. more concise, but possibly less readable depending on the reader's python experience:
@@ -209,6 +222,7 @@ def verb_replace_advcl(original_document):
     # Return the original if no replacements have been made.
     return original_document
 
+
 def capitalize_first_letter(text):
     """Capitalizes the first letter of the input text if it is lowercase.
     
@@ -225,6 +239,27 @@ def capitalize_first_letter(text):
     matches = [rule for rule in matches if cap_rule(rule)]
     
     return language_tool_python.utils.correct(text, matches)
+
+
+def show_token_details(original_document):
+    """Print lemma, part of speech, and other details for each token in doc."""
+    
+    for token in nlp(original_document):
+        print (token, token.lemma_, token.dep_, token.tag_, token.pos_
+                , spacy.explain(token.tag_), token.head)
+
+
+def show_noun_chunks(original_document):
+    """Print noun chunks and related details for the document."""
+
+    for chunk in nlp(original_document).noun_chunks:
+        print('noun chunk:',chunk
+            ,'\nchunk root:', chunk.root.text
+            ,'\nchunk dependency:', chunk.root.dep_
+            ,'\nroot head text:', chunk.root.head.text
+            ,'\nchunk part of speech',chunk.root.pos_
+            ,'\n-------------------')
+
 
 if __name__ == "__main__":
 
@@ -258,20 +293,6 @@ if __name__ == "__main__":
 
     df.to_csv(".\\transformed_data\\all_titles_and_plots.csv")
 
-
-
-
-# for token in nlp(plot):
-#      print (token, token.lemma_, token.dep_, token.tag_, token.pos_
-#             , spacy.explain(token.tag_), token.head)
-
-# for chunk in nlp(verbs_replaced).noun_chunks:
-#     print('noun chunk:',chunk
-#           ,'\nchunk root:', chunk.root.text
-#           ,'\nchunk dependency:', chunk.root.dep_
-#           ,'\nroot head text:', chunk.root.head.text
-#           ,'\nchunk part of speech',chunk.root.pos_
-#           ,'\n-------------------')
 
 # View dependency tree
 # displacy.serve(nlp_doc, style='dep')

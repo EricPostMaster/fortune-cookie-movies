@@ -9,7 +9,35 @@ MOVIE_ID_PATH = os.path.join(".", "pickled_raw_data", "movie_ids.p")
 
 
 class MovieDict:
-    """
+    """Holds the dataset as well as the movie IDs that will be used to expand 
+    the dataset with each subsequent API call.
+
+    Methods
+    -------
+    get_movies : Return a JSON payload with data on a single movie from IMDb.
+        Checks that the movie is not already in the dataset.
+    
+    remove_fluff : Remove movie IDs from self.movie_ids so they will not be used
+        in API calls.
+
+    save_movie_data : Save self.movie_data
+
+    save_movie_ids : Save self.movie_ids
+
+    Attributes
+    ----------
+    self.movie_data : dict
+        The main bugaboo of the class. It's a dictionary of dictionaries, and
+        the keys are the IMDb unique identifiers (e.g., 'tt0114709') for each 
+        movie. Each entry contains a ton of info about each movie, like title, 
+        main actors, similar movies, and ratings. Tons of potential here.
+
+    self.movie_ids : dict
+        Auxilary data used to grow self.movie_data. It's also a dictionary, but 
+        it's a lot simpler. It's just key-value pairs of movie IDs and titles. 
+        The class methods will add new movies to this dictionary from the 
+        "Similars" section of the JSON payload of each movie.
+
     """
 
     def __init__(self):
@@ -96,41 +124,6 @@ class MovieDict:
                     print(value, 'is already in the movie_data dict')
 
 
-    def save_movie_data(self, filename='movie_data', filetype='p'):
-        """Saves self.movie_data in a pickle file.
-
-        Parameters
-        ----------
-        filename : str
-            Name to assign to the saved file (default is 'movie_data')
-        
-        filetype : str
-            File type to assign to the saved file (default is 'p')
-
-        """
-        filepath = os.path.join(".", "pickled_raw_data", f"{filename}.{filetype}")
-        with open(filepath, "wb") as p:
-            pickle.dump(self.movie_data, p)
-        print("movie data saved")
-
-    
-    def save_movie_ids(self, filename='movie_ids', filetype='p'):
-        """Saves self.movie_ids in a pickle file.
-        
-        Parameters
-        ----------
-        filename : str
-            Name to assign to the saved file (default is 'movie_ids')
-        
-        filetype : str
-            File type to assign to the saved file (default is 'p')
-
-        """
-        filepath = os.path.join(".", "pickled_raw_data", f"{filename}.{filetype}")
-        with open(filepath, "wb") as p:
-            pickle.dump(self.movie_ids, p)
-            print("movie ids saved")
-    
     def remove_fluff(self):
         """Some movies, particularly sequels, end up having "similars" that are
         just little mini-movies that nobody has ever heard of. To avoid wasting 
@@ -173,6 +166,41 @@ class MovieDict:
 
         self.movie_ids = trimmed_ids
 
+    
+    def save_movie_data(self, filename='movie_data', filetype='p'):
+        """Saves self.movie_data in a pickle file.
+
+        Parameters
+        ----------
+        filename : str
+            Name to assign to the saved file (default is 'movie_data')
+        
+        filetype : str
+            File type to assign to the saved file (default is 'p')
+
+        """
+        filepath = os.path.join(".", "pickled_raw_data", f"{filename}.{filetype}")
+        with open(filepath, "wb") as p:
+            pickle.dump(self.movie_data, p)
+        print("movie data saved")
+
+    
+    def save_movie_ids(self, filename='movie_ids', filetype='p'):
+        """Saves self.movie_ids in a pickle file.
+        
+        Parameters
+        ----------
+        filename : str
+            Name to assign to the saved file (default is 'movie_ids')
+        
+        filetype : str
+            File type to assign to the saved file (default is 'p')
+
+        """
+        filepath = os.path.join(".", "pickled_raw_data", f"{filename}.{filetype}")
+        with open(filepath, "wb") as p:
+            pickle.dump(self.movie_ids, p)
+            print("movie ids saved")
 
 
 if __name__ == "__main__":

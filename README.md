@@ -37,14 +37,20 @@ Data is pulled from IMDb using [imdb-api](https://www.imdb-api.com), which at th
 
 The current script uses the [spaCy English language transformer pipeline](https://spacy.io/models/en#en_core_web_trf). I tried using the small pipeline to get started, and while it saves a lot of memory, performance is just so much better with the transformer model. The movie plots are transformed and saved ahead of time. I then used [Tortus](https://pypi.org/project/tortus/) package to annotate the plots as Good, Okay, or Bad to decide which ones would be served up to users. The initial app only shows those that were tagged as Good, but Okay fortunes are still intelligible.
 
-### 
+### Web application
 
-
+The app is built on Plotly Dash. It is Dockerized and pushed to AWS Elastic Container Registry. If you're interested in doing something similar, you can follow [this _excellent_ tutorial](https://towardsdatascience.com/how-to-use-docker-to-deploy-a-dashboard-app-on-aws-8df5fb322708) from Melvin Varughese.
 
 
 ## Contribute!
 
 This app exists because cool people contributed a bit of their time and expertise to make it a reality. You are welcome to submit ideas and improvements by creating issues and pull requests on this repo!
+
+Cool contributors:
+* [Jay Seabrum](https://github.com/xjseabrum)
+* [Teresa Behr](https://github.com/teresabehr)
+* [Michael Long](https://github.com/michael-long88)
+* [Caleb Keller](https://github.com/wrathagom)
 
 ### Running the web app
 
